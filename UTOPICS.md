@@ -4,9 +4,9 @@ Block 0 contains the 94 printable characters from US-ASCII (ASCII 0x21 - 0x7E).
 
 Block 1 contains general punctuation and symbols. Blocks 2-127 each contain the characters for a particular writing system.
 
-Blocks 128-137 are a "Private Use Area" (PUA), where the codepoints are deliberately unassigned and unreserved. Outside of the PUA, all unassigned codepoints are reserved for future expansion.
+Blocks 128-177 are reserved for future expansion.
 
-Blocks 138-187 are reserved for future expansion.
+Blocks 178-187 are a "Private Use Area" (PUA), where the codepoints are deliberately unassigned and unreserved. Outside of the PUA, all unassigned codepoints are reserved for future expansion.
 
 Block 188 contains control characters and other special characters that are not part of any particular writing system.
 
@@ -52,9 +52,11 @@ Blocks 120-123 - Vai
 Blocks 124 & 125 - N'Ko  
 Block 126 - Cherokee  
 Block 127 - Canadian Aboriginal Syllabics  
-Blocks 128-137 - Private Use Area (PUA)  
-Blocks 138-187 - Reserved for future expansion  
+Blocks 128-177 - Reserved for future expansion  
+Blocks 178-187 - Private Use Area (PUA)  
 Block 188 - Specials
+
+THIS ROADMAP IS TENTATIVE AND PRONE TO CHANGE. IT WILL BE FINALIZED WHEN UTOPIA 1.0 IS RELEASED.
 
 Each block will be documented separately on this wiki.
 
@@ -75,6 +77,8 @@ When used in a binary data stream, a UTOPICS codepoint X.Y is encoded as follows
 * Codepoints in blocks 95 to 188 are encoded as a sequence of three bytes. The first byte is 0xFF. The second byte is 0x9F + X - 94. (X is from 95 to 188, giving a byte from 0xA0 to 0xFD.) The third byte is 0xA0 + Y. (Y is from 0 to 93, giving a byte from 0xA0 to 0xFD.)
 
 This is the only normatively correct way to represent UTOPICS in binary. There are no 32-bit, 16-bit, big-endian, or little-endian versions.
+
+If you think three bytes to encode one character is a lot of overhead, well, that's the price of interoperability with Unicode.
 
 # The Utopia data stream
 
