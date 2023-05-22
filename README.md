@@ -54,30 +54,19 @@ American Scripts
  * Cherokee
  * Canadian Aboriginal Syllabics
 
-# What changes will need to be made to the Linux console?
-
-* Support for console fonts with more than 512 characters.
-* Support for displaying characters of different widths
-* Support for overlaid characters (multiple characters appearing in one cell)
-* Support for displaying bidirectional text
-* Support for bidirectional cursor handling
-* Support for a RTL (right-to-left) mode
-* Support for contextual characters
-* Support for Chinese and Japanese input methods
-
-Note that Utopia requires the Linux framebuffer console.
-
 # Why? 
 
 You might wonder if there's any need for the Linux console to support non-Latin scripts. After all, the Linux console is used almost solely by developers, and the fact of our world is that developers need to be functionally literate in English. Users who are not developers would rather use a Linux distro that boots straight into a graphical environment.
 
-To which, I have three responses.
+To which, I have four responses.
 
 1) Developers need to read documentation, and if documentation is available in their native language, they might benefit from being able to read that documentation on the Linux console.
 
 2) Developers might like to write emails in their native language on the Linux console.
 
-3) It's a matter of basic fairness. The Linux kernel should not favour one language over another.
+3) Some embedded systems might lack a graphical environment.
+
+4) It's a matter of basic fairness. The Linux kernel should not favour one language over another.
 
 # Is this doable?
 
@@ -92,3 +81,35 @@ UTOPICS is NOT Unicode. It has different design goals from Unicode. However, UTO
 UTOPICS is designed to be easy to render with console-style bitmap fonts, so that no one has to try to insert a Pango-style rendering engine into the Linux kernel.
 
 See UTOPICS.md for more information.
+
+# Why not Unicode? If you added support for Unicode to the Linux kernel, Linus Torvalds would merge the patch right now!
+
+Unicode requires a degree of complexity that is largely incompatible with the Unix design philosophy. It would require that language-specific processing for many languages be added to the Linux kernel, like repositioning the reph in Hindi, or contextual shaping of Arabic letters. Up until now, the Linux kernel has always been language-independent, and that's how it should remain. 
+
+If you want an insight into how complex Unicode can be, try looking at the [Unicode bidirectional algorithm](https://unicode.org/reports/tr9/) sometime. Or try reading about the various kinds of Zero-Width Joiner and Zero-Width Non-Joiner characters which are needed to render Hindi.
+
+Here are some of the ways that Unicode differs from UTOPICS.
+
+* Unicode follows the philosophy that each codepoint should correspond to a single letter, even if that letter takes different forms in different contexts. In contrast, each UTOPICS codepoint corresponds to a glyph, meaning a particular visual shape. Rendering is trivial. There is no need for a book that explains how a codepoint should be rendered. (This also makes UTOPICS intuitive for users. The fact that Unicode Persian keyboards require a Zero-Width Non-Joiner key is a bit of a travesty, if you ask me. Khmer-speakers and Mongolian-speakers are other examples of people who have found Unicode unintuitive to deal with.)
+
+* Unicode follows the philosophy that characters should be stored in "logical order", even when that order is different from the visual order of the characters (though it makes an exception for Thai, for compatibility with earlier standards). This requires logic to reorder the characters for rendering. UTOPICS, in contrast, pragmatically stores characters in visual order.
+
+* Unicode attempts to infer from context whether a punctuation character should be treated as left-to-right or right-to-left, providing TWELVE different control characters that can override the default inference. (This is part of the "one character, one codepoint" philosophy.) In UTOPICS, each character is explicitly left-to-right or right-to-left. This means that UTOPICS has, for example, two different question mark characters: One for use in Hebrew (right-to-left), and one for use in English (left-to-right).
+
+The Utopia Linux kernel will not contain any language-specific processing. It will, however, add broad support for right-to-left characters, larger character sets, and "overlay" (non-spacing) characters.
+
+For programmers, Utopia offers some other benefits over Unicode. Changing the case of a Unicode character (uppercase or lowercase) requires a table lookup, but in UTOPICS, changing the case of a character requires only the flipping of bit, as in ASCII. Also, UTOPICS does not have multiple "normalization" forms. (There is no normalization form C, D, KC, or KD.)
+
+# How will keyboard input work?
+
+As you probably know, some languages like Chinese and Japanese require "input methods". The Utopia project will include a shell program that executes commands inside a pseudo-terminal that will process keyboard input and provide input method functionality. Because the shell program executes in user space, language-specific processing can be kept out of the kernel.
+
+This shell will also be required for languages like Arabic and Hindi, as the input layer will contain the logic for contextual shaping and reordering.
+
+# But the translation files for my software are encoded in Unicode. I need to display Unicode text!
+
+No problem! The aforementioned shell program will also be able to automatically convert Unicode output into (approximately) equivalent UTOPICS code for display on the console.
+
+# Requirements
+
+Utopia uses (and requires) the Linux framebuffer console.
