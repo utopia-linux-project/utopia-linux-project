@@ -1,64 +1,14 @@
-The UTOPICS character set consists of 189 'blocks', numbered from 0 to 188. Each block contains 94 codepoints.
-
-Block 0 contains the 94 printable characters from US-ASCII (ASCII 0x21 - 0x7E).
-
-Block 1 contains general punctuation and symbols. Blocks 2-127 each contain the characters for a particular writing system.
-
-Blocks 128-177 are reserved for future expansion.
-
-Blocks 178-187 are a "Private Use Area" (PUA), where the codepoints are deliberately unassigned and unreserved. Outside of the PUA, all unassigned codepoints are reserved for future expansion.
-
-Block 188 contains control characters and other special characters that are not part of any particular writing system.
-
 # Roadmap
+
+The UTOPICS character set consists of 189 'blocks', numbered from 0 to 188. Each block contains 94 codepoints. Block 0 contains the 94 printable characters from US-ASCII (ASCII 0x21 - 0x7E). Block 188 contains control characters and other special characters.
+
 Block 0 - ASCII  
-Block 1 - General Punctuation & Symbols  
+Block 1 - General Punctuation 
 Block 2 - European Latin  
-Blocks 3 & 4 - Cyrillic  
-Block 5 - Greek  
-Block 6 - Armenian  
-Block 7 - Georgian  
-Blocks 8 & 9 - Arabic / Perso-Arabic  
-Block 10 - Hebrew  
-Block 11 - Syriac  
-Block 12 - Thaana (Divehi)  
-Block 13 - Bengali / Assamese  
-Blocks 14 & 15 - Devanagari  
-Block 16 - Gurmurkhi  
-Block 17 - Gujarati  
-Block 18 - Oriya  
-Block 19 - Telegu  
-Block 20 - Malayalam  
-Block 21 - Kannada  
-Block 22 - Tamil  
-Block 23 - Sinhala  
-Block 24 - Burmese  
-Block 25 - Thai  
-Block 26 - Lao  
-Blocks 27 & 28 - Khmer  
-Block 29 - Tibetan  
-Block 30 - Mongolian  
-Blocks 31 & 32 - Hangul Jamo  
-Block 33 - Hirigana  
-Block 34 - Katakana  
-Blocks 35-108 - Hanzi / Kanji  
-Block 109 - Bopomofo & Pinyin  
-Block 110 - Vietnamese Latin  
-Blocks 111 & 112 - African Latin  
-Block 113 - Coptic  
-Block 114 - Tifinagh  
-Blocks 115-119 - Ethiopic (Ge'ez)  
-Blocks 120-123 - Vai  
-Blocks 124 & 125 - N'Ko  
-Block 126 - Cherokee  
-Block 127 - Canadian Aboriginal Syllabics  
-Blocks 128-177 - Reserved for future expansion  
-Blocks 178-187 - Private Use Area (PUA)  
+Block 3 - European Latin Diacritics
+Blocks 4 - Cyrillic
+... TO BE COMPLETED ...
 Block 188 - Specials
-
-THIS ROADMAP IS TENTATIVE AND PRONE TO CHANGE. IT WILL BE FINALIZED WHEN UTOPIA 1.0 IS RELEASED.
-
-Each block will be documented separately on this wiki.
 
 # UTOPICS Codepoint Notation
 
@@ -115,3 +65,19 @@ Note that:
  * The bytes 0xFE and 0xFF never appear as the second or third byte of a UTOPICS sequence. So the start of a UTOPICS sequence can always be distinguished from the middle of a UTOPICS sequence.
  * When the bytes 0x00-0x7F appear in a Utopia data stream, they always represent the same value they would represent in ASCII.
  * In a Pure Utopia data stream, the bytes 0x80-0x9F always represent C1 control characters. In a Mixed Utopia data stream, they could represent C1 control characters or they could represent continuation (non-start) bytes in UTF-8 sequences, so proper UTF-8 decoding is required to disambiguate them.
+
+# Why not Unicode?
+
+Unicode requires a degree of complexity that is largely incompatible with the Unix design philosophy. It would require that language-specific processing for many languages be added to the Linux kernel, like repositioning the reph in Hindi, or contextual shaping of Arabic letters. Up until now, the Linux kernel has always been language-independent, and that's how it should remain. 
+
+The Utopia Linux kernel will not contain any language-specific processing. It will, however, add broad support for right-to-left characters, larger character sets, and "overlay" (non-spacing) characters.
+
+Here are some of the ways that Unicode differs from UTOPICS.
+
+* Unicode follows the philosophy that each codepoint should correspond to a single letter, even if that letter takes different forms in different contexts. In contrast, each UTOPICS codepoint corresponds to a glyph, meaning a particular visual shape. Rendering is trivial. There is no need for a book that explains how a codepoint should be rendered. (This also makes UTOPICS intuitive for users. The fact that Unicode Persian keyboards require a Zero-Width Non-Joiner key is a bit of a travesty, if you ask me. Khmer-speakers and Mongolian-speakers are other examples of people who have found Unicode unintuitive to deal with.)
+
+* Unicode follows the philosophy that characters should be stored in "logical order", even when that order is different from the visual order of the characters (though it makes an exception for Thai, for compatibility with earlier standards). This requires logic to reorder the characters for rendering. UTOPICS, in contrast, pragmatically stores characters in visual order.
+
+* Unicode attempts to infer from context whether a punctuation character should be treated as left-to-right or right-to-left, providing TWELVE different control characters that can override the default inference. (This is part of the "one character, one codepoint" philosophy.) In UTOPICS, each character is explicitly left-to-right or right-to-left. This means that UTOPICS has, for example, two different question mark characters: One for use in Hebrew (right-to-left), and one for use in English (left-to-right). (If you want an insight into how complex Unicode can be, try looking at the [Unicode bidirectional algorithm](https://unicode.org/reports/tr9/) sometime.)
+
+For programmers, Utopia offers some other benefits over Unicode. Changing the case of a Unicode character (uppercase or lowercase) requires a table lookup, but in UTOPICS, changing the case of a character requires only the flipping of bit, as in ASCII. Also, UTOPICS does not have multiple "normalization" forms. (There is no normalization form C, D, KC, or KD.)
