@@ -6,7 +6,7 @@ Block 0 - ASCII
 Block 1 - General Punctuation  
 Block 2 - European Latin  
 Block 3 - European Latin Diacritics  
-Blocks 4 - Cyrillic  
+Block 4 - Cyrillic  
 ... TO BE COMPLETED ...  
 Block 188 - Specials
 
