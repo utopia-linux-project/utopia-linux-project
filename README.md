@@ -66,7 +66,7 @@ UTOPICS is NOT Unicode. It has different design goals from Unicode. However, UTO
 
 UTOPICS is designed to be easy to render with console-style bitmap fonts, so that no one has to try to insert a Pango-style rendering engine into the Linux kernel.
 
-See UTOPICS.md for more information.
+See utopia-linux-project/UTOPICS.md for more information.
 
 # How will keyboard input work?
 
