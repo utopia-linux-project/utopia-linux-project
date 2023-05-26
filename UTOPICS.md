@@ -74,7 +74,7 @@ The Utopia Linux kernel will not contain any language-specific processing. It wi
 
 Here are some of the ways that Unicode differs from UTOPICS.
 
-* Unicode follows the philosophy that each codepoint should correspond to a single letter, even if that letter takes different forms in different contexts. In contrast, each UTOPICS codepoint corresponds to a glyph, meaning a particular visual shape. Rendering is trivial. There is no need for a book that explains how a codepoint should be rendered. (This also makes UTOPICS intuitive for users. The fact that Unicode Persian keyboards require a Zero-Width Non-Joiner key is a bit of a travesty, if you ask me. Khmer-speakers and Mongolian-speakers are other examples of people who have found Unicode unintuitive to deal with.)
+* Unicode follows the philosophy that each codepoint should correspond to a single letter, even if that letter takes different forms in different contexts. In contrast, each UTOPICS codepoint corresponds to a glyph, meaning a particular visual shape. Rendering is trivial. There is no need for a book that explains how a codepoint should be rendered. (There are no "joiner" or "non-joiner" characters in UTOPICS.)
 
 * Unicode follows the philosophy that characters should be stored in "logical order", even when that order is different from the visual order of the characters (though it makes an exception for Thai, for compatibility with earlier standards). This requires logic to reorder the characters for rendering. UTOPICS, in contrast, pragmatically stores characters in visual order.
 
