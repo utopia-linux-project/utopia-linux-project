@@ -3,11 +3,11 @@
 The UTOPICS character set consists of 189 'blocks', numbered from 0 to 188. Each block contains 94 codepoints. Block 0 contains the 94 printable characters from US-ASCII (ASCII 0x21 - 0x7E). Block 188 contains control characters and other special characters.
 
 Block 0 - ASCII  
-Block 1 - General Punctuation 
+Block 1 - General Punctuation  
 Block 2 - European Latin  
-Block 3 - European Latin Diacritics
-Blocks 4 - Cyrillic
-... TO BE COMPLETED ...
+Block 3 - European Latin Diacritics  
+Blocks 4 - Cyrillic  
+... TO BE COMPLETED ...  
 Block 188 - Specials
 
 # UTOPICS Codepoint Notation
