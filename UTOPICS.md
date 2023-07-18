@@ -2,12 +2,12 @@
 
 The UTOPICS character set consists of 512 'rows' (numbered 0 to 511). Each row contains 128 'columns'. Row 0 is identical to US-ASCII.
 
-Row 0 - US-ASCII
-Row 1 - Specials
-Row 2 - General Punctuation
-...
-Rows 508 & 509 - Braille
-Rows 510 & 511 - DOS Code Page 437  ("Direct-to-hardware" mapping on VGA-compatible devices.)
+Row 0 - US-ASCII  
+Row 1 - Specials  
+Row 2 - General Punctuation  
+...  
+Rows 508 & 509 - Braille  
+Rows 510 & 511 - DOS Code Page 437  ("Direct-to-hardware" mapping on VGA-compatible devices.)  
 
 # UTOPICS Codepoint Notation
 
