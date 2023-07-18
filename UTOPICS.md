@@ -1,70 +1,36 @@
 # Roadmap
 
-The UTOPICS character set consists of 189 'blocks', numbered from 0 to 188. Each block contains 94 codepoints. Block 0 contains the 94 printable characters from US-ASCII (ASCII 0x21 - 0x7E). Block 188 contains control characters and other special characters.
+The UTOPICS character set consists of 512 'rows' (numbered 0 to 511). Each row contains 128 'columns'. Row 0 is identical to US-ASCII.
 
-Block 0 - ASCII  
-Block 1 - General Punctuation  
-Block 2 - European Latin  
-Block 3 - European Latin Diacritics  
-Block 4 - Cyrillic  
-... TO BE COMPLETED ...  
-Block 188 - Specials
+Row 0 - US-ASCII
+Row 1 - Specials
+Row 2 - General Punctuation
+...
+Rows 508 & 509 - Braille
+Rows 510 & 511 - DOS Code Page 437  ("Direct-to-hardware" mapping on VGA-compatible devices.)
 
 # UTOPICS Codepoint Notation
 
-The standard way to notate a codepoint in UTOPICS is as _X.Y_, where X is the block number, and Y is the position of the codepoint (starting at 0, up to a maximum of 93) within that block. X and Y are both decimal numbers, not hex. Y can be one or two digits.
+The standard way to notate a codepoint in UTOPICS is as _X.Y_, where X is the row number, and Y is the column (starting at 0, up to a maximum of 127) within that block. X and Y are in decimal format, not hex.
 
-So the tenth character in the Greek block is written as 5.9 (or 5.09), and the twelfth character in the Armenian block is 6.11.
-
-This notation is for the convenience of humans, not machines. It's designed to be easy to type on a numeric keypad (for Alt-key entry), and to be distinct from the notation used for ASCII or Unicode codepoints.
+This notation is for the convenience of humans, not machines. It's designed to be easy to type on a numeric keypad (for Alt-key entry), and to be distinct from the notation used for Unicode codepoints.
 
 # UTOPICS Binary Representation
 
-When used in a binary data stream, a UTOPICS codepoint X.Y is encoded as follows.
+A UTOPICS character can fit into a 16-bit integer. (Hence, UTOPICS can be described as a 16-bit character set.)
 
-* Codepoints in Block 0 are encoded as a single-byte, equal to 0x21 + Y. This gives a value identical to ASCII.
-* Codepoints in blocks 1 to 94 are encoded as a sequence of three bytes. The first byte is 0xFE. The second byte is 0x9F + X. (X is from 1 to 94, giving a byte from 0xA0 to 0xFD.) The third byte is 0xA0 + Y. (Y is from 0 to 93, giving a byte from 0xA0 to 0xFD.)
-* Codepoints in blocks 95 to 188 are encoded as a sequence of three bytes. The first byte is 0xFF. The second byte is 0x9F + X - 94. (X is from 95 to 188, giving a byte from 0xA0 to 0xFD.) The third byte is 0xA0 + Y. (Y is from 0 to 93, giving a byte from 0xA0 to 0xFD.)
+    u16 character = (row & 0x1FF) << 7 | (column & 0x7F);
 
-This is the only normatively correct way to represent UTOPICS in binary. There are no 32-bit, 16-bit, big-endian, or little-endian versions.
+However, when transmitting UTOPICS data between different applications, it is recommended to use UTF-8 encoding. This allows UTOPICS data to be mixed with Unicode data with no ambiguity.
 
-If you think three bytes to encode one character is a lot of overhead, well, that's the price of interoperability with Unicode.
+To encode UTOPICS data in UTF-8, first a transformation is applied:
 
-# The Utopia data stream
+* For characters in row 0 (ASCII), no transformation is applied.
+* For other characters, 0xF0000 is added to the 16-bit integer value of the character. This puts the character in Plane 15 of Unicode (which is Private Use Plane).
 
-The UTOPICS character set is not designed to be used on its own. (For one thing, there's no space character in UTOPICS.) The UTOPICS character set is designed to appear within a Utopia Data Stream.
+Then the result is UTF-8 encoded as usual. (This means that every non-ASCII UTOPICS character takes up *four* bytes in UTF-8, with the first byte being 0xF7. If you think that's a lot of overhead, well, that's the price of interoperability with Unicode.)
 
-The follow kinds of data can appear in a Utopia Data Stream.
-
- * ASCII bytes, including:
-   * C0 control characters (0x00 - 0x1F)
-   * The SP (space) character (0x20)
-   * The 94 printable ASCII characters (0x21 - 0x7E). (This is identical to Block 0 of UTOPICS.)
-   * The DEL (delete) character (0x7F)
-
- * C1 control character bytes (0x80 - 0x9F)
-   This is of note for the Linux console, which uses the CSI (0x9B) character.
-
- * Multi-byte Encoded UTOPICS characters (Start byte: 0xFE - 0xFF)
-   These represent UTOPICS characters in Blocks 1 and above, as described above.
-
- * UTF-8 sequences (Start byte: 0xC0 - 0xFD)
-   A Utopia application must be able to decode and process UTF-8 sequences in the data stream without corruption. However, a Utopia application is not required to display those characters. The application may choose to ignore Unicode characters, or may substitute a question mark or other character. Alternatively, the application may automatically convert Unicode characters to an equivalent (or approximately equivalent) UTOPICS character.
-
-# Mixing UTOPICS and UTF-8
-
-I will use the term "Pure Utopia" to describe data that consists only of UTOPICS sequences, ASCII characters, and C1 characters. I will use the term "Mixed Utopia" to describe data that also contains UTF-8 sequences.
-
-Note that UTF-8 is not "C1 clean", meaning that UTF-8 sequences can include bytes in the 0x80-0x9F range, colliding with the C1 control characters. (This is not an issue introduced by UTOPICS. This is a pre-existing gotcha.) Hence, Mixed Utopia data is not C1 clean either.
-
-However, with proper UTF-8 decoding, C1 control characters can be distinguished from UTF-8 sequences, because the start byte of a UTF-8 sequence will never be the same as a C1 control character.
-
-Note that:
- * UTOPICS sequences always start with 0xFE or 0xFF.
- * The bytes 0xFE and 0xFF are not used in UTF-8, so there can be no confusion between UTOPICS sequences and UTF-8 sequences.
- * The bytes 0xFE and 0xFF never appear as the second or third byte of a UTOPICS sequence. So the start of a UTOPICS sequence can always be distinguished from the middle of a UTOPICS sequence.
- * When the bytes 0x00-0x7F appear in a Utopia data stream, they always represent the same value they would represent in ASCII.
- * In a Pure Utopia data stream, the bytes 0x80-0x9F always represent C1 control characters. In a Mixed Utopia data stream, they could represent C1 control characters or they could represent continuation (non-start) bytes in UTF-8 sequences, so proper UTF-8 decoding is required to disambiguate them.
+Although UTOPICS uses UTF-8, it doesn't not use the Unicode character set (ISO 10646). (In this context, "UTF" could be said to stand for "Utopia Transformation Format", rathern than Unicode Transformation Format.)
 
 # Why not Unicode?
 
@@ -74,10 +40,12 @@ The Utopia Linux kernel will not contain any language-specific processing. It wi
 
 Here are some of the ways that Unicode differs from UTOPICS.
 
-* Unicode follows the philosophy that each codepoint should correspond to a single letter, even if that letter takes different forms in different contexts. In contrast, each UTOPICS codepoint corresponds to a glyph, meaning a particular visual shape. Rendering is trivial. There is no need for a book that explains how a codepoint should be rendered. (There are no "joiner" or "non-joiner" characters in UTOPICS.)
+* Unicode follows the philosophy that each codepoint should correspond to a single "letter", even if that letter takes different forms in different contexts. In contrast, each UTOPICS codepoint corresponds to a glyph, meaning a particular visual shape. Rendering is trivial. There is no need for a book that explains how a codepoint should be rendered, and there are no "joiner" or "non-joiner" characters in UTOPICS.
 
-* Unicode follows the philosophy that characters should be stored in "logical order", even when that order is different from the visual order of the characters (though it makes an exception for Thai, for compatibility with earlier standards). This requires logic to reorder the characters for rendering. UTOPICS, in contrast, pragmatically stores characters in visual order.
+* UTOPICS pragmatically stores characters in visual order. Unicode follows the philosophy that characters should be stored in "logical order", even when that order is different from the visual order of the characters (though it makes an exception for Thai, for compatibility with earlier standards). This requires logic to reorder the corresponding glyphs for rendering.
 
-* Unicode attempts to infer from context whether a punctuation character should be treated as left-to-right or right-to-left, providing TWELVE different control characters that can override the default inference. (This is part of the "one character, one codepoint" philosophy.) In UTOPICS, each character is explicitly left-to-right or right-to-left. This means that UTOPICS has, for example, two different question mark characters: One for use in Hebrew (right-to-left), and one for use in English (left-to-right). (If you want an insight into how complex Unicode can be, try looking at the [Unicode bidirectional algorithm](https://unicode.org/reports/tr9/) sometime.)
+* In UTOPICS, each character is explicitly left-to-right or right-to-left. This means that UTOPICS has, for example, two different question mark characters: One for use in Hebrew (right-to-left), and one for use in English (left-to-right). In Unicode, there is only one question mark character, and its directionality must be inferred from context according to complex rules. (This is part of the "one character, one codepoint" philosophy.) 
+And if those rules aren't complex enough, Unicode provides TWELVE different control characters that can be used override the default inference. (If you want an insight into how complex Unicode can be, try looking at the [Unicode bidirectional algorithm](https://unicode.org/reports/tr9/) sometime.)
 
-For programmers, Utopia offers some other benefits over Unicode. Changing the case of a Unicode character (uppercase or lowercase) requires a table lookup, but in UTOPICS, changing the case of a character requires only the flipping of bit, as in ASCII. Also, UTOPICS does not have multiple "normalization" forms. (There is no normalization form C, D, KC, or KD.)
+For programmers, Utopia offers some other benefits over Unicode. Changing the case of a Unicode character (uppercase or lowercase) requires a table lookup, but in UTOPICS, changing the case of a character requires only the flipping of bit, as in ASCII.
+
