@@ -1,17 +1,16 @@
 # Roadmap
 
-The UTOPICS character set consists of 512 'rows' (numbered 0 to 511). Each row contains 128 'columns'. Row 0 is identical to US-ASCII.
+The UTOPICS character set consists of 256 blocks (numbered 0 to 255). Each block contains 256 glyphs.
 
-Row 0 - US-ASCII  
-Row 1 - Specials  
-Row 2 - General Punctuation  
+Block 0 - US-ASCII & Latin-1
+Block 1 - Symbols & General Punctuation
 ...  
-Rows 508 & 509 - Braille  
-Rows 510 & 511 - DOS Code Page 437  ("Direct-to-hardware" mapping on VGA-compatible devices.)  
+Block 254 - Braille  
+Block 255 - DOS Code Page 437  ("Direct-to-hardware" mapping on VGA-compatible devices.)  
 
 # UTOPICS Codepoint Notation
 
-The standard way to notate a codepoint in UTOPICS is as _X.Y_, where X is the row number, and Y is the column (starting at 0, up to a maximum of 127) within that block. X and Y are in decimal format, not hex.
+The standard way to notate a codepoint in UTOPICS is as _X.Y_, where X is called the 'row' and Y is called the 'column'. The row identifies the block and the column represents the glyph inside the block. Both X and Y are between 0 and 255 inclusive.
 
 This notation is for the convenience of humans, not machines. It's designed to be easy to type on a numeric keypad (for Alt-key entry), and to be distinct from the notation used for Unicode codepoints.
 
@@ -19,13 +18,13 @@ This notation is for the convenience of humans, not machines. It's designed to b
 
 A UTOPICS character can fit into a 16-bit integer. (Hence, UTOPICS can be described as a 16-bit character set.)
 
-    u16 character = (row & 0x1FF) << 7 | (column & 0x7F);
+    u16 character = (row << 8) | column;
 
 However, when transmitting UTOPICS data between different applications, it is recommended to use UTF-8 encoding. This allows UTOPICS data to be mixed with Unicode data with no ambiguity.
 
 To encode UTOPICS data in UTF-8, first a transformation is applied:
 
-* For characters in row 0 (ASCII), no transformation is applied.
+* For characters in block 0, no transformation is applied.
 * For other characters, 0xF0000 is added to the 16-bit integer value of the character. This puts the character in Plane 15 of Unicode (which is Private Use Plane).
 
 Then the result is UTF-8 encoded as usual. (This means that every non-ASCII UTOPICS character takes up *four* bytes in UTF-8, with the first byte being 0xF7. If you think that's a lot of overhead, well, that's the price of interoperability with Unicode.)
