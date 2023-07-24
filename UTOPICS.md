@@ -2,9 +2,72 @@
 
 The UTOPICS character set consists of 256 blocks (numbered 0 to 255). Each block contains 256 glyphs.
 
+**European Scripts**  
 Block 0 - US-ASCII  
-Block 1 - Symbols & General Punctuation  
+Block 1 - General Punctuation  
+Block 2 - European Latin  
+Block 3 - Cyrillic  
+Block 4 - Greek  
+Block 5 - Armenian  
+Block 6 - Armenian Punctuation
+Block 7 - Georgian  
 ...  
+**Middle Eastern Scripts**  
+Block 20 - Coptic  
+Block 21 - Right-to-left Punctuation
+Block 22 - Hebrew  
+Block 23 - Arabic  
+Block 24 - Arabic Punctuation
+Block 25 - Syriac  
+...  
+**South Asian Scripts**  
+Block 40 - Bengali / Assamese  
+Block 41 - Devanagari  
+Block 42 - Gurmurkhi  
+Block 43 - Gujarati  
+Block 44 - Oriya  
+Block 45 - Telegu  
+Block 46 - Malayalam  
+Block 47 - Kannada  
+Block 48 - Tamil  
+Block 49 - Sinhala  
+Block 50 - Divehi  
+...  
+**South-East Asian Scripts**  
+Block 60 - Burmese  
+Block 61 - Thai  
+Block 62 - Lao  
+Block 63 - Khmer  
+Block 64 - Vietnamese Latin  
+...  
+**African Scripts**  
+Block 80-81 - Ethiopic  
+Block 82 - Tifinagh  
+Block 83 - African Latin  
+Blocks 84-85 - Vai  
+Block 86 - N'ko  
+Block 87 - Adlam  
+...  
+**American & Pacific Scripts**  
+Block 100 - Cherokee  
+Block 101 - Canadian Syllabics  
+Block 102 - American & Pacific Latin
+...  
+**East Asian Scripts**  
+Block 120 - Tibetan  
+Block 121 - Mongolian  
+Block 122 - Katakana  
+Block 123 - Hirigana  
+Blocks 124-125 - Hangul  
+Block 126 - Bopomofo (Zhuyin)  
+Block 127 - Pinyin (Chinese Latin)  
+Blocks 128-??? - Han  
+...  
+**Other**
+Block 200 - IPA  
+...  
+Blocks 220-251 - Private Use Area
+Block 252 - Line Drawing & NCurses
 Block 253 - Braille  
 Block 254 - DOS Code Page 437  ("Direct-to-hardware" mapping on VGA-compatible devices.)  
 Block 255 - (Invalid codepoints)
