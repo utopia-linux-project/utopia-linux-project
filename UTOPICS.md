@@ -9,16 +9,14 @@ Block 2 - European Latin
 Block 3 - Cyrillic  
 Block 4 - Greek  
 Block 5 - Armenian  
-Block 6 - Armenian Punctuation
-Block 7 - Georgian  
+Block 6 - Georgian  
 ...  
 **Middle Eastern Scripts**  
 Block 20 - Coptic  
-Block 21 - Right-to-left Punctuation
+Block 21 - Right-to-left Punctuation  
 Block 22 - Hebrew  
 Block 23 - Arabic  
-Block 24 - Arabic Punctuation
-Block 25 - Syriac  
+Block 24 - Syriac  
 ...  
 **South Asian Scripts**  
 Block 40 - Bengali / Assamese  
@@ -66,11 +64,11 @@ Blocks 128-??? - Han
 **Other**
 Block 200 - IPA  
 ...  
-Blocks 220-251 - Private Use Area
-Block 252 - Line Drawing & NCurses
+Blocks 220-251 - Private Use Area  
+Block 252 - Line Drawing & NCurses  
 Block 253 - Braille  
 Block 254 - DOS Code Page 437  ("Direct-to-hardware" mapping on VGA-compatible devices.)  
-Block 255 - (Invalid codepoints)
+Block 255 - (Invalid codepoints)  
 
 # UTOPICS Codepoint Notation
 
