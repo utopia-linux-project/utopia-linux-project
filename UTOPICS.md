@@ -51,7 +51,7 @@ Block 87 - Adlam
 **American & Pacific Scripts**  
 Block 100 - Cherokee  
 Block 101 - Canadian Syllabics  
-Block 102 - American & Pacific Latin
+Block 102 - American & Pacific Latin  
 ...  
 **East Asian Scripts**  
 Block 120 - Tibetan  
