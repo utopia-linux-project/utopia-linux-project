@@ -61,7 +61,7 @@ Block 126 - Bopomofo (Zhuyin)
 Block 127 - Pinyin (Chinese Latin)  
 Blocks 128-??? - Han  
 ...  
-**Other**
+**Other**  
 Block 200 - IPA  
 ...  
 Blocks 220-251 - Private Use Area  
