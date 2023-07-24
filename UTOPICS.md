@@ -2,11 +2,12 @@
 
 The UTOPICS character set consists of 256 blocks (numbered 0 to 255). Each block contains 256 glyphs.
 
-Block 0 - US-ASCII & Latin-1
-Block 1 - Symbols & General Punctuation
+Block 0 - US-ASCII  
+Block 1 - Symbols & General Punctuation  
 ...  
-Block 254 - Braille  
-Block 255 - DOS Code Page 437  ("Direct-to-hardware" mapping on VGA-compatible devices.)  
+Block 253 - Braille  
+Block 254 - DOS Code Page 437  ("Direct-to-hardware" mapping on VGA-compatible devices.)  
+Block 255 - (Invalid codepoints)
 
 # UTOPICS Codepoint Notation
 
